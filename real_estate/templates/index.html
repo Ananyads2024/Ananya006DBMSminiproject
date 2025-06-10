@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real Estate Listings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- 🌐 Navigation Bar -->
+    <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-blue-600">Real Estate Portal</h1>
+        <div>
+            {% if session.username %}
+                <span class="mr-4 text-gray-700">Welcome, <strong>{{ session.username }}</strong>!</span>
+                <a href="/logout"
+                   class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                   Logout
+                </a>
+            {% else %}
+                <a href="/login"
+                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium mr-2 transition">
+                   Login
+                </a>
+                <a href="/register"
+                   class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                   Register
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- 🏠 Property Listings -->
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Real Estate Properties</h1>
+
+        <div class="text-right mb-6">
+            <a href="/add" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                + Add Property
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for prop in properties %}
+            <div class="bg-white shadow-lg rounded-2xl p-6 space-y-4">
+                <h2 class="text-xl font-semibold text-blue-700">{{ prop.title }}</h2>
+                <p class="text-gray-600">{{ prop.location }} | ₹{{ prop.price }}</p>
+                <p class="text-sm text-gray-500">{{ prop.type }}</p>
+                <p class="text-gray-700">{{ prop.description }}</p>
+
+                <!-- ⭐ Average Rating -->
+                <p><strong>Average Rating:</strong> {{ prop.avg_rating or "No ratings yet" }}</p>
+
+                <!-- 💬 Latest Review -->
+                {% if prop.latest_review %}
+                <p><strong>Latest Review:</strong> "{{ prop.latest_review }}"</p>
+                {% endif %}
+
+                <!-- 🔗 Review Page -->
+                <a href="/review/{{ prop.id }}" class="text-blue-500 hover:underline">View/Add Reviews</a><br>
+
+                <!-- 🗑️ Delete -->
+                <a href="/delete/{{ prop.id }}" onclick="return confirm('Delete this property?')"
+                   class="text-red-500 hover:underline">Delete</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
